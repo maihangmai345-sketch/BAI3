@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Trắc nghiệm Công nghệ 10 - Bài 3: Công nghệ phổ biến</title>
+  <meta name="description" content="Trắc nghiệm 100 câu Công nghệ 10 - Bài 3: Công nghệ phổ biến chuẩn hóa có thi 10 phút, báo cáo giáo viên và giải thích chi tiết.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @media print {
+      body { background: white !important; font-size: 11pt; color: #000 !important; }
+      #sticky-info-bar, #question-nav-panel, .no-print, button, .controls-row { display: none !important; }
+      #results-container { display: block !important; border: none !important; box-shadow: none !important; }
+      .print-qa-card { page-break-inside: avoid; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 8px; }
+      .print-show { display: block !important; }
+    }
+    .print-show { display: none; }
+  </style>
+<script src="/_aistudio-iframe.js?v=2c34bde1"></script></head>
+<body class="bg-gradient-to-br from-sky-50 via-indigo-50/50 to-blue-100/60 text-slate-800 min-h-screen flex flex-col font-sans antialiased">
+  
+  <!-- STUDENT REGISTRATION POPUP -->
+  <div id="student-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-sky-100">
+      <div class="text-center mb-6">
+        <div class="inline-flex p-3.5 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 text-white shadow-md shadow-blue-500/20 mb-3 text-2xl">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <h2 class="text-xl font-extrabold text-slate-900">Khai Báo Thông Tin Học Sinh</h2>
+        <p class="text-xs text-slate-500 mt-1">Nhập họ tên và lớp trước khi làm bài để giáo viên tổng hợp kết quả thi.</p>
+      </div>
+
+      <form id="student-form" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+            Họ và tên học sinh <span class="text-rose-500">*</span>
+          </label>
+          <input type="text" id="input-student-name" required placeholder="Ví dụ: Nguyễn Văn An" class="w-full px-4 py-3 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50 text-sm font-medium">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+            Lớp học <span class="text-rose-500">*</span>
+          </label>
+          <input type="text" id="input-student-class" required placeholder="Ví dụ: 10A1, 10A2..." class="w-full px-4 py-3 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50 text-sm font-medium">
+        </div>
+
+        <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-2xl text-sm transition shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2">
+          <i class="fa-solid fa-check"></i>
+          <span>Xác nhận & Bắt đầu làm bài</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOP BAR -->
+  <div class="bg-slate-900/95 backdrop-blur-md text-slate-200 px-4 py-2 border-b border-slate-800 text-xs">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2.5">
+      <div class="flex items-center gap-2">
+        <span class="font-semibold text-white">Chế độ:</span>
+        <div class="inline-flex rounded-xl bg-slate-800 p-0.5 border border-slate-700">
+          <button id="btn-mode-exam10" class="px-3 py-1 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold flex items-center gap-1.5 shadow-xs">
+            <i class="fa-regular fa-clock text-amber-300"></i>
+            <span>Thi 10 câu (10 phút)</span>
+          </button>
+          <button id="btn-mode-practice100" class="px-3 py-1 rounded-lg text-slate-300 hover:text-white font-medium flex items-center gap-1.5">
+            <i class="fa-solid fa-book-open text-blue-300"></i>
+            <span>Ôn trọn bộ 100 câu</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <div id="student-badge" class="flex items-center gap-1.5 px-3 py-1 bg-slate-800/80 hover:bg-slate-700 cursor-pointer rounded-lg border border-slate-700 text-slate-200">
+          <i class="fa-regular fa-user text-sky-400"></i>
+          <span id="badge-name" class="font-semibold text-white">Học sinh</span>
+          <span class="text-slate-500">•</span>
+          <span id="badge-class" class="text-amber-300 font-semibold">Lớp 10</span>
+        </div>
+        <button id="btn-change-exam10" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-amber-300 rounded-lg border border-slate-700 flex items-center gap-1.5">
+          <i class="fa-solid fa-dice"></i>
+          <span>Đổi đề</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STICKY HEADER -->
+  <header id="sticky-info-bar" class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-indigo-100 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 py-2.5 sm:py-3 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <button id="toggle-nav-btn" class="lg:hidden p-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div>
+          <h1 id="header-title" class="text-sm sm:text-base font-bold text-slate-900 truncate flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-blue-600 inline-block animate-pulse"></span>
+            Đề thi trắc nghiệm 10 câu ngẫu nhiên (10 phút)
+          </h1>
+          <p class="text-xs text-slate-500 hidden sm:block">
+            Cơ cấu chuẩn: 4 Biết • 3 Hiểu • 3 Vận dụng • Tự động nộp khi hết giờ
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 sm:gap-4 shrink-0">
+        <div id="timer-box" class="flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs sm:text-sm font-mono font-bold bg-amber-50 text-amber-900 border border-amber-200">
+          <i class="fa-regular fa-clock text-amber-600"></i>
+          <span id="quiz-timer">10:00</span>
+        </div>
+        <div class="hidden sm:flex items-center gap-1.5 text-xs sm:text-sm font-medium text-slate-600 bg-white/80 border border-slate-200 px-3 py-1 rounded-xl">
+          <span>Đã chọn:</span>
+          <span id="answered-questions-count" class="font-bold text-blue-700">0</span>/
+          <span id="total-questions-static">10</span>
+        </div>
+        <div id="sticky-score-badge" class="hidden flex items-center gap-1 px-3 py-1 bg-emerald-50 border border-emerald-300 rounded-xl text-emerald-900 text-xs sm:text-sm font-semibold">
+          <span>Điểm:</span>
+          <span id="current-score-sticky" class="font-bold text-sm sm:text-base text-emerald-700">0</span>
+        </div>
+        <button id="submit-quiz-button" class="px-4 py-1.5 text-xs sm:text-sm font-bold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl transition shadow-md shadow-blue-500/20">
+          Nộp bài thi
+        </button>
+      </div>
+    </div>
+    <div class="w-full bg-slate-200/60 h-1.5">
+      <div id="progress-bar-fill" class="bg-gradient-to-r from-blue-500 to-indigo-600 h-1.5 transition-all duration-300" style="width: 0%"></div>
+    </div>
+  </header>
+
+  <!-- MAIN VIEW -->
+  <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+    <!-- QUESTION AREA -->
+    <section id="question-area" class="lg:col-span-8 flex flex-col gap-4">
+      <article class="bg-white/95 backdrop-blur-sm rounded-3xl p-5 sm:p-7 shadow-xl shadow-indigo-500/5 border border-indigo-100 overflow-hidden">
+        <!-- Visual Topic Header Banner -->
+        <div class="relative rounded-2xl overflow-hidden mb-6 h-36 sm:h-44 shadow-md group">
+          <img id="topic-image" src="https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80" alt="Topic" class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-900/30 to-transparent flex flex-col justify-end p-4 text-white">
+            <div class="flex items-center gap-2 mb-1">
+              <span id="q-counter-badge" class="px-2.5 py-0.5 bg-blue-600/90 text-white rounded-md text-xs font-bold">Câu 1 / 10</span>
+              <span id="question-level-badge" class="px-2.5 py-0.5 bg-white/20 text-white rounded-md text-xs font-medium">Mức: Biết</span>
+              <span id="question-topic-badge" class="px-2.5 py-0.5 bg-amber-500/90 text-white rounded-md text-xs font-bold">Luyện kim</span>
+            </div>
+            <div class="text-xs text-slate-200">Công nghệ 10 - Bài 3: Công nghệ phổ biến</div>
+          </div>
+        </div>
+
+        <h2 id="question-text" class="text-base sm:text-lg font-bold text-slate-900 leading-relaxed mb-6">
+          Đang tải câu hỏi...
+        </h2>
+
+        <div id="options-container" class="space-y-3"></div>
+
+        <!-- EXPLANATION CARD (Only displayed after submit) -->
+        <div id="explanation-container" class="hidden mt-6 pt-5 border-t border-slate-200/80">
+          <div class="p-5 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50/40 border border-indigo-100 text-xs sm:text-sm">
+            <div class="flex items-center gap-2 mb-2 font-bold text-slate-900">
+              <i class="fa-regular fa-lightbulb text-amber-500"></i>
+              <span>Giải thích chi tiết (Đáp án đúng: <span id="correct-key-text" class="text-emerald-700 font-extrabold"></span>):</span>
+            </div>
+            <div id="wrong-choice-note" class="hidden mb-3 p-3 bg-rose-50 border border-rose-200 rounded-xl text-rose-900 font-medium"></div>
+            <p id="explanation-correct-text" class="text-slate-800 leading-relaxed font-semibold mb-3"></p>
+            <div id="explanation-options-breakdown" class="space-y-1.5 pt-2 border-t border-slate-200 text-xs text-slate-600"></div>
+          </div>
+        </div>
+
+        <!-- NAVIGATION CONTROLS -->
+        <div class="mt-6 pt-4 flex items-center justify-between gap-3 border-t border-slate-100 controls-row">
+          <button id="prev-question-btn" class="px-4 py-2.5 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-medium transition disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 shadow-2xs">
+            <i class="fa-solid fa-chevron-left"></i>
+            <span>Câu trước</span>
+          </button>
+          <span class="text-xs text-slate-400 hidden sm:block">Bạn có thể thay đổi phương án đã chọn trước khi nộp</span>
+          <button id="next-question-btn" class="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs sm:text-sm font-bold transition flex items-center gap-1.5 shadow-md shadow-blue-500/20">
+            <span>Câu tiếp</span>
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+      </article>
+    </section>
+
+    <!-- NAVIGATION PANEL -->
+    <aside id="question-nav-panel" class="fixed inset-y-0 right-0 z-50 w-80 bg-white/95 backdrop-blur-md border-l border-indigo-100 p-5 shadow-2xl flex flex-col transition-transform duration-300 translate-x-full lg:translate-x-0 lg:static lg:w-auto lg:col-span-4 lg:shadow-xl lg:shadow-indigo-500/5 lg:rounded-3xl lg:border">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200 mb-3">
+        <h3 id="sidebar-title" class="font-bold text-slate-900 text-sm sm:text-base">Mục lục câu hỏi (10 câu)</h3>
+        <button id="close-nav-btn" class="lg:hidden p-1.5 text-slate-500 hover:text-slate-800">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="mb-3 p-3 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl text-xs flex items-center justify-between">
+        <div>
+          <span id="nav-student-name" class="font-bold text-slate-900">Học sinh</span>
+          <span class="text-slate-400"> - </span>
+          <span id="nav-student-class" class="font-extrabold text-blue-700">Lớp 10</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2 text-2xs sm:text-xs text-slate-500 mb-3 p-2.5 bg-slate-50 rounded-2xl border border-slate-200/80">
+        <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-blue-600 inline-block"></span><span>Đang xem</span></div>
+        <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-blue-200 border border-blue-400 inline-block"></span><span>Đã chọn</span></div>
+      </div>
+
+      <div class="flex-1 overflow-y-auto max-h-[46vh] pr-1">
+        <div id="nav-grid" class="grid grid-cols-5 gap-1.5"></div>
+      </div>
+
+      <div class="mt-4 pt-3 border-t border-slate-200">
+        <button id="sidebar-submit-btn" class="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs sm:text-sm font-bold rounded-2xl transition shadow-md shadow-blue-500/20 flex items-center justify-center gap-2">
+          <i class="fa-solid fa-check"></i>
+          <span>Nộp bài & Xem điểm</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- RESULTS VIEW (Hidden initially) -->
+    <section id="results-container" class="hidden lg:col-span-12 max-w-4xl mx-auto w-full bg-white/95 rounded-3xl shadow-xl shadow-indigo-500/5 border border-indigo-100 overflow-hidden">
+      <div id="results-banner" class="p-6 sm:p-8 text-center bg-blue-50 border-b border-indigo-100">
+        <div class="inline-flex p-3.5 rounded-3xl bg-white shadow-md shadow-indigo-500/10 mb-3 text-3xl text-blue-600">
+          <i class="fa-solid fa-trophy"></i>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-1">Báo Cáo Điểm Bài Thi</h2>
+        
+        <div class="my-3 inline-flex flex-wrap items-center justify-center gap-3 px-5 py-2.5 bg-white/95 border border-indigo-100 rounded-2xl shadow-xs text-xs sm:text-sm">
+          <span>Học sinh: <strong id="res-student-name" class="text-blue-700"></strong></span>
+          <span class="text-slate-300">|</span>
+          <span>Lớp: <strong id="res-student-class" class="text-amber-700"></strong></span>
+          <span class="text-slate-300">|</span>
+          <span id="res-datetime" class="text-slate-500 font-mono"></span>
+        </div>
+
+        <p id="performance-title" class="text-base font-bold text-blue-700 mb-1"></p>
+        <p id="performance-desc" class="text-sm text-slate-600 max-w-md mx-auto"></p>
+
+        <div class="mt-5 flex flex-wrap justify-center items-baseline gap-2">
+          <span id="final-score-val" class="text-5xl sm:text-6xl font-black text-slate-900 font-mono">0</span>
+          <span id="final-score-denom" class="text-2xl sm:text-3xl font-bold text-slate-400">/ 10 điểm</span>
+          <span id="final-percent-val" class="ml-3 px-3.5 py-1 bg-white rounded-full text-base font-bold text-blue-700 shadow-sm border border-blue-200">0%</span>
+        </div>
+      </div>
+
+      <div class="p-6 sm:p-8 space-y-6">
+        <div class="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 text-xs sm:text-sm">
+          <div>
+            <span class="font-bold text-blue-950">📋 Báo cáo nộp bài cho Giáo viên:</span>
+            <span class="text-slate-600 ml-1">Sao chép kết quả để gửi Zalo hoặc nộp bài.</span>
+          </div>
+          <button id="copy-summary-btn" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-xl transition shadow-sm flex items-center gap-1.5 shrink-0">
+            <i class="fa-regular fa-copy"></i>
+            <span id="copy-btn-label">Sao chép kết quả</span>
+          </button>
+        </div>
+
+        <div class="pt-4 border-t border-slate-200 grid grid-cols-2 sm:grid-cols-4 gap-2.5 controls-row">
+          <button id="review-answers-button" class="px-3 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-sm">
+            <i class="fa-regular fa-eye"></i>
+            <span>Xem giải thích</span>
+          </button>
+          <button id="reset-quiz-button" class="px-3 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-sm">
+            <i class="fa-solid fa-dice"></i>
+            <span>Làm đề mới</span>
+          </button>
+          <button id="save-pdf-button" class="px-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-1.5 transition">
+            <i class="fa-solid fa-print"></i>
+            <span>In / PDF</span>
+          </button>
+          <button id="generate-qr-button" class="px-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-1.5 transition">
+            <i class="fa-solid fa-qrcode"></i>
+            <span>Mã QR điểm</span>
+          </button>
+        </div>
+
+        <!-- DETAILED LIST WITH EXPLANATION FOR WRONG ONES -->
+        <div class="pt-6 border-t border-slate-200 space-y-4">
+          <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+            <i class="fa-regular fa-circle-question text-amber-500"></i>
+            <span>Bảng chi tiết & Giải thích lý do nếu làm sai</span>
+          </h3>
+          <div id="results-detail-list" class="space-y-4"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- QR MODAL -->
+  <div id="qr-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl border border-indigo-100">
+      <h4 class="text-lg font-bold text-slate-900 mb-1">Mã QR Điểm Bài Thi</h4>
+      <p class="text-xs text-slate-500 mb-3">Giáo viên quét mã bằng camera điện thoại hoặc Zalo để lấy điểm.</p>
+      <img id="qr-code-img" src="" alt="Mã QR" class="w-48 h-48 mx-auto p-2 bg-white border border-slate-200 rounded-2xl mb-4">
+      <button id="close-qr-btn" class="w-full py-2.5 bg-slate-800 text-white rounded-xl text-sm font-medium">Đóng</button>
+    </div>
+  </div>
+
+  <div id="mobile-nav-backdrop" class="hidden fixed inset-0 z-40 bg-black/30 lg:hidden"></div>
+
+  <script>
+    // Embedded 100 Questions Data
+    const quizData = [
+      {
+        id: 1, level: 'Biết', topic: 'Luyện kim',
+        question: 'Công nghệ luyện kim là công nghệ',
+        options: [
+          'A. chế tạo sản phẩm kim loại bằng cách rót kim loại lỏng vào khuôn.',
+          'B. điều chế kim loại, hợp kim từ quặng hoặc các nguyên liệu khác.',
+          'C. nối các chi tiết kim loại thành một khối.',
+          'D. làm biến dạng kim loại bằng ngoại lực.'
+        ],
+        correctAnswer: 'B',
+        explanations: {
+          correct: 'Công nghệ luyện kim là công nghệ điều chế kim loại, hợp kim từ quặng hoặc các nguyên liệu khác phục vụ cho chế tạo cơ khí và đời sống.',
+          A: 'Đây là công nghệ đúc kim loại.',
+          B: 'Chính xác theo định nghĩa chuẩn.',
+          C: 'Đây là công nghệ hàn.',
+          D: 'Đây là gia công áp lực.'
+        }
+      },
+      {
+        id: 2, level: 'Biết', topic: 'Luyện kim',
+        question: 'Công nghệ luyện kim đen tạo ra sản phẩm chủ yếu là',
+        options: ['A. nhôm và đồng.', 'B. vàng và kẽm.', 'C. gang và thép.', 'D. thép và đồng.'],
+        correctAnswer: 'C',
+        explanations: {
+          correct: 'Luyện kim đen là ngành sản xuất kim loại đen, sản phẩm chủ yếu là gang và thép (hợp kim của sắt với carbon).',
+          A: 'Nhôm và đồng là kim loại màu.',
+          B: 'Vàng và kẽm là kim loại màu.',
+          C: 'Chính xác: gang và thép là sản phẩm chủ lực.',
+          D: 'Đồng là kim loại màu.'
+        }
+      },
+      {
+        id: 3, level: 'Biết', topic: 'Luyện kim',
+        question: 'Công nghệ luyện kim màu tạo ra các kim loại như',
+        options: ['A. gang và thép.', 'B. nhôm, đồng, vàng, chì, kẽm.', 'C. gang và nhôm.', 'D. thép và đồng.'],
+        correctAnswer: 'B',
+        explanations: {
+          correct: 'Luyện kim màu tạo ra các kim loại không chứa sắt như nhôm, đồng, vàng, chì, kẽm...',
+          A: 'Gang và thép thuộc kim loại đen.',
+          B: 'Chính xác: các kim loại màu tiêu biểu.',
+          C: 'Gang thuộc kim loại đen.',
+          D: 'Thép thuộc kim loại đen.'
+        }
+      },
+      {
+        id: 4, level: 'Biết', topic: 'Đúc kim loại',
+        question: 'Công nghệ đúc kim loại là công nghệ',
+        options: [
+          'A. lấy đi một phần kim loại của phôi để tạo chi tiết.',
+          'B. kéo dài phôi qua lỗ khuôn.',
+          'C. nấu kim loại thành trạng thái lỏng rồi rót vào khuôn.',
+          'D. nối các chi tiết bằng kim loại.'
+        ],
+        correctAnswer: 'C',
+        explanations: {
+          correct: 'Đúc là phương pháp nấu chảy kim loại thành lỏng rồi rót vào lòng khuôn đúc.',
+          A: 'Đây là gia công cắt gọt.',
+          B: 'Đây là kéo kim loại.',
+          C: 'Chính xác theo nguyên lý công nghệ đúc.',
+          D: 'Đây là công nghệ hàn.'
+        }
+      },
+      {
+        id: 5, level: 'Biết', topic: 'Đúc kim loại',
+        question: 'Sau khi kim loại lỏng trong khuôn đông đặc, sản phẩm thu được gọi là',
+        options: ['A. phôi cán.', 'B. vật đúc.', 'C. phoi.', 'D. mối hàn.'],
+        correctAnswer: 'B',
+        explanations: {
+          correct: 'Sản phẩm sau khi kim loại lỏng đông đặc và nguội trong khuôn được gọi là vật đúc.',
+          A: 'Phôi cán là của công nghệ cán.',
+          B: 'Chính xác: sản phẩm của đúc gọi là vật đúc.',
+          C: 'Phoi sinh ra khi cắt gọt.',
+          D: 'Mối hàn là của công nghệ hàn.'
+        }
+      },
+      {
+        id: 6, level: 'Biết', topic: 'Gia công cắt gọt',
+        question: 'Công nghệ gia công cắt gọt thực hiện việc',
+        options: [
+          'A. lấy đi một phần kim loại của phôi dưới dạng phoi.',
+          'B. làm nóng chảy toàn bộ phôi.',
+          'C. nối các chi tiết bằng kim loại.',
+          'D. kéo phôi qua khuôn.'
+        ],
+        correctAnswer: 'A',
+        explanations: {
+          correct: 'Gia công cắt gọt bóc tách từng lớp kim loại khỏi phôi dưới dạng phoi để đạt hình dáng mong muốn.',
+          A: 'Chính xác theo định nghĩa.',
+          B: 'Nóng chảy là đúc hoặc hàn.',
+          C: 'Nối là công nghệ hàn.',
+          D: 'Kéo phôi qua khuôn là kéo kim loại.'
+        }
+      },
+      {
+        id: 7, level: 'Biết', topic: 'Gia công cắt gọt',
+        question: 'Sản phẩm của công nghệ gia công cắt gọt thường có',
+        options: [
+          'A. độ chính xác và độ nhẵn bề mặt cao.',
+          'B. kích thước luôn rất lớn.',
+          'C. độ chính xác thấp.',
+          'D. dạng kim loại lỏng.'
+        ],
+        correctAnswer: 'A',
+        explanations: {
+          correct: 'Gia công cắt gọt đạt độ chính xác hình học kích thước rất cao cùng độ nhẵn bóng bề mặt.',
+          A: 'Chính xác: độ chính xác và độ nhẵn bề mặt cao.',
+          B: 'Kích thước đa dạng.',
+          C: 'Cắt gọt có độ chính xác cao.',
+          D: 'Sản phẩm ở thể rắn.'
+        }
+      },
+      {
+        id: 8, level: 'Biết', topic: 'Gia công cắt gọt',
+        question: 'Công nghệ nào sau đây thuộc gia công cắt gọt?',
+        options: ['A. Cán.', 'B. Rèn.', 'C. Tiện.', 'D. Hàn.'],
+        correctAnswer: 'C',
+        explanations: {
+          correct: 'Tiện là phương pháp gia công cắt gọt bóc tách phoi cơ bản.',
+          A: 'Cán thuộc gia công áp lực.',
+          B: 'Rèn thuộc gia công áp lực.',
+          C: 'Chính xác: Tiện thuộc gia công cắt gọt.',
+          D: 'Hàn thuộc ghép nối.'
+        }
+      },
+      {
+        id: 9, level: 'Biết', topic: 'Gia công áp lực',
+        question: 'Công nghệ gia công áp lực dựa chủ yếu vào',
+        options: ['A. tính dẫn điện của kim loại.', 'B. tính dẻo của kim loại.', 'C. tính từ của kim loại.', 'D. tính phát sáng của kim loại.'],
+        correctAnswer: 'B',
+        explanations: {
+          correct: 'Gia công áp lực dựa vào tính dẻo của kim loại để biến dạng phôi dưới tác dụng ngoại lực.',
+          A: 'Tính dẫn điện dùng truyền tải điện.',
+          B: 'Chính xác: dựa vào tính dẻo.',
+          C: 'Tính từ không liên quan biến dạng dẻo.',
+          D: 'Kim loại không phát sáng.'
+        }
+      },
+      {
+        id: 10, level: 'Biết', topic: 'Gia công áp lực',
+        question: 'Công nghệ nào sau đây thuộc gia công áp lực?',
+        options: ['A. Tiện.', 'B. Phay.', 'C. Cán.', 'D. Hàn.'],
+        correctAnswer: 'C',
+        explanations: {
+          correct: 'Cán là một trong các phương pháp gia công áp lực (cán, kéo, rèn, dập).',
+          A: 'Tiện thuộc cắt gọt.',
+          B: 'Phay thuộc cắt gọt.',
+          C: 'Chính xác: Cán thuộc gia công áp lực.',
+          D: 'Hàn thuộc ghép nối.'
+        }
+      }
+    ];
+
+    // Topic Assets
+    const TOPIC_ASSETS = {
+      'Luyện kim': { image: 'https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80', icon: '🔥' },
+      'Đúc kim loại': { image: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=800&q=80', icon: '🏺' },
+      'Gia công cắt gọt': { image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80', icon: '✂️' },
+      'Gia công áp lực': { image: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=800&q=80', icon: '🔨' },
+      'Hàn': { image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=800&q=80', icon: '⚡' },
+      'Sản xuất điện năng': { image: 'https://images.unsplash.com/photo-1466611653911-95081537e5b7?auto=format&fit=crop&w=800&q=80', icon: '🌊' },
+      'Điện – quang': { image: 'https://images.unsplash.com/photo-1507499739999-097706ad8914?auto=format&fit=crop&w=800&q=80', icon: '💡' },
+      'Điện – cơ': { image: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&w=800&q=80', icon: '🔄' },
+      'Điều khiển và Tự động hóa': { image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=800&q=80', icon: '🤖' },
+      'Truyền thông không dây': { image: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=800&q=80', icon: '📡' }
+    };
+
+    // State Variables
+    let currentQuestions = [...quizData];
+    let currentIndex = 0;
+    let userAnswers = {};
+    let isSubmitted = false;
+    let timerInterval = null;
+    let timeRemaining = 600;
+
+    // Elements
+    const qText = document.getElementById('question-text');
+    const optContainer = document.getElementById('options-container');
+    const qCounter = document.getElementById('q-counter-badge');
+    const qLevel = document.getElementById('question-level-badge');
+    const qTopic = document.getElementById('question-topic-badge');
+    const topicImg = document.getElementById('topic-image');
+    const navGrid = document.getElementById('nav-grid');
+    const timerDisplay = document.getElementById('quiz-timer');
+    const progressBar = document.getElementById('progress-bar-fill');
+    const answeredCountEl = document.getElementById('answered-questions-count');
+    const totalCountEl = document.getElementById('total-questions-static');
+
+    function renderQuestion() {
+      const q = currentQuestions[currentIndex];
+      if (!q) return;
+
+      qText.textContent = q.question;
+      qCounter.textContent = `Câu ${currentIndex + 1} / ${currentQuestions.length}`;
+      qLevel.textContent = `Mức: ${q.level}`;
+      qTopic.textContent = q.topic;
+
+      const asset = TOPIC_ASSETS[q.topic] || TOPIC_ASSETS['Luyện kim'];
+      topicImg.src = asset.image;
+
+      optContainer.innerHTML = '';
+      ['A', 'B', 'C', 'D'].forEach((letter, idx) => {
+        const optText = q.options[idx] || '';
+        const isSelected = userAnswers[q.id] === letter;
+        const isCorrect = q.correctAnswer === letter;
+
+        const lbl = document.createElement('label');
+        lbl.className = `flex items-start gap-3.5 p-4 rounded-2xl border transition-all cursor-pointer select-none text-sm min-h-[56px] shadow-2xs ${
+          isSelected ? 'bg-blue-50/80 border-blue-600 text-blue-950 font-semibold ring-2 ring-blue-500/20' : 'border-slate-200 bg-white hover:bg-blue-50/40'
+        }`;
+
+        lbl.innerHTML = `
+          <div class="pt-0.5">
+            <div class="w-7 h-7 rounded-xl border flex items-center justify-center text-xs font-black ${
+              isSelected ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white' : 'border-slate-300 bg-slate-100'
+            }">${letter}</div>
+          </div>
+          <span class="flex-1 leading-snug pt-1">${optText.replace(/^[A-D]\.\s*/, '')}</span>
+        `;
+
+        lbl.onclick = () => {
+          if (isSubmitted) return;
+          userAnswers[q.id] = letter;
+          renderQuestion();
+          renderNavGrid();
+          updateProgress();
+        };
+
+        optContainer.appendChild(lbl);
+      });
+    }
+
+    function renderNavGrid() {
+      navGrid.innerHTML = '';
+      currentQuestions.forEach((q, idx) => {
+        const isCurrent = currentIndex === idx;
+        const hasAnswered = userAnswers[q.id] !== undefined;
+
+        const btn = document.createElement('button');
+        btn.className = `h-10 rounded-xl border text-xs font-bold transition flex items-center justify-center ${
+          isCurrent ? 'bg-blue-600 text-white ring-2 ring-blue-400' :
+          hasAnswered ? 'bg-blue-100 text-blue-900 border-blue-300' : 'bg-slate-100 text-slate-700'
+        }`;
+        btn.textContent = idx + 1;
+        btn.onclick = () => {
+          currentIndex = idx;
+          renderQuestion();
+          renderNavGrid();
+        };
+        navGrid.appendChild(btn);
+      });
+    }
+
+    function updateProgress() {
+      const answered = Object.keys(userAnswers).length;
+      answeredCountEl.textContent = answered;
+      totalCountEl.textContent = currentQuestions.length;
+      progressBar.style.width = `${(answered / currentQuestions.length) * 100}%`;
+    }
+
+    // Timer
+    timerInterval = setInterval(() => {
+      if (timeRemaining <= 0) {
+        clearInterval(timerInterval);
+        alert('Hết giờ làm bài!');
+        return;
+      }
+      timeRemaining--;
+      const mins = Math.floor(timeRemaining / 60).toString().padStart(2, '0');
+      const secs = (timeRemaining % 60).toString().padStart(2, '0');
+      timerDisplay.textContent = `${mins}:${secs}`;
+    }, 1000);
+
+    // Initial render
+    document.getElementById('student-form').onsubmit = (e) => {
+      e.preventDefault();
+      const name = document.getElementById('input-student-name').value;
+      const cls = document.getElementById('input-student-class').value;
+      document.getElementById('badge-name').textContent = name;
+      document.getElementById('badge-class').textContent = cls;
+      document.getElementById('nav-student-name').textContent = name;
+      document.getElementById('nav-student-class').textContent = cls;
+      document.getElementById('student-modal').classList.add('hidden');
+    };
+
+    document.getElementById('prev-question-btn').onclick = () => {
+      if (currentIndex > 0) { currentIndex--; renderQuestion(); renderNavGrid(); }
+    };
+
+    document.getElementById('next-question-btn').onclick = () => {
+      if (currentIndex < currentQuestions.length - 1) { currentIndex++; renderQuestion(); renderNavGrid(); }
+    };
+
+    renderQuestion();
+    renderNavGrid();
+    updateProgress();
+  </script>
+</body>
+</html>
