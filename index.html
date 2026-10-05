@@ -78,6 +78,10 @@
           <span class="text-slate-500">•</span>
           <span id="badge-class" class="text-amber-300 font-semibold">Lớp 10</span>
         </div>
+        <button id="btn-teacher-portal" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-amber-300 rounded-lg border border-slate-700 flex items-center gap-1.5 font-semibold">
+          <i class="fa-solid fa-lock text-amber-400"></i>
+          <span id="teacher-portal-label">Cổng Giáo Viên</span>
+        </button>
         <button id="btn-change-exam10" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-amber-300 rounded-lg border border-slate-700 flex items-center gap-1.5">
           <i class="fa-solid fa-dice"></i>
           <span>Đổi đề</span>
@@ -149,6 +153,27 @@
         <h2 id="question-text" class="text-base sm:text-lg font-bold text-slate-900 leading-relaxed mb-6">
           Đang tải câu hỏi...
         </h2>
+
+        <!-- BANNER KHI ĐÃ LÀM ĐỦ 10 CÂU: NỘP BÀI NGAY KHÔNG CẦN CHỜ 10 PHÚT -->
+        <div id="banner-completed-10" class="hidden mb-5 p-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/20 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="p-2 bg-white/20 rounded-xl text-xl">
+              <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <div>
+              <div class="font-extrabold text-sm sm:text-base">
+                Bạn đã hoàn thành đủ <span id="banner-answered-total">10/10</span> câu hỏi!
+              </div>
+              <div class="text-xs text-emerald-100">
+                Bạn có thể nộp bài ngay để chấm điểm và xem giải thích chi tiết, không cần đợi hết 10 phút.
+              </div>
+            </div>
+          </div>
+          <button id="banner-submit-btn" class="w-full sm:w-auto px-5 py-2.5 bg-white hover:bg-slate-50 text-emerald-800 font-extrabold rounded-xl text-xs sm:text-sm transition shadow-md shrink-0 flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-check"></i>
+            <span>Nộp bài ngay</span>
+          </button>
+        </div>
 
         <div id="options-container" class="space-y-3"></div>
 
@@ -290,6 +315,157 @@
       <p class="text-xs text-slate-500 mb-3">Giáo viên quét mã bằng camera điện thoại hoặc Zalo để lấy điểm.</p>
       <img id="qr-code-img" src="" alt="Mã QR" class="w-48 h-48 mx-auto p-2 bg-white border border-slate-200 rounded-2xl mb-4">
       <button id="close-qr-btn" class="w-full py-2.5 bg-slate-800 text-white rounded-xl text-sm font-medium">Đóng</button>
+    </div>
+  </div>
+
+  <!-- TEACHER LOGIN MODAL -->
+  <div id="teacher-login-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl border border-indigo-100">
+      <div class="text-center mb-5">
+        <div class="inline-flex p-3 rounded-2xl bg-amber-100 text-amber-700 mb-2 text-2xl">
+          <i class="fa-solid fa-lock"></i>
+        </div>
+        <h3 class="text-xl font-extrabold text-slate-900">Cổng Quản Trị Giáo Viên</h3>
+        <p class="text-xs text-slate-500 mt-1">
+          Khu vực dành riêng cho giáo viên xem sổ điểm của học sinh và xuất file Excel. Học sinh không có quyền truy cập.
+        </p>
+      </div>
+
+      <form id="teacher-login-form" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+            Mật khẩu Giáo viên <span class="text-rose-500">*</span>
+          </label>
+          <div class="relative">
+            <input type="password" id="input-teacher-pwd" required placeholder="Nhập mật khẩu (Mặc định: giaovien123)" class="w-full px-4 py-3 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50 text-sm font-medium">
+          </div>
+          <div class="text-2xs text-slate-400 mt-1">
+            Gợi ý: Mật khẩu mặc định là <code class="bg-slate-100 px-1 py-0.5 rounded text-blue-700 font-bold">giaovien123</code>
+          </div>
+        </div>
+
+        <div id="teacher-login-err" class="hidden p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700 font-medium">
+          Mật khẩu giáo viên không đúng!
+        </div>
+
+        <div class="flex items-center gap-2 pt-2">
+          <button type="button" id="close-teacher-login-btn" class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-2xl text-sm transition">
+            Đóng
+          </button>
+          <button type="submit" class="flex-1 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-2xl text-sm transition shadow-md shadow-blue-500/20 flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-unlock"></i>
+            <span>Đăng nhập</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TEACHER GRADEBOOK MODAL -->
+  <div id="teacher-gradebook-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl max-w-4xl w-full p-6 sm:p-7 shadow-2xl border border-indigo-100 max-h-[92vh] flex flex-col">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200 mb-4">
+        <div class="flex items-center gap-2.5">
+          <div class="p-2.5 bg-gradient-to-tr from-emerald-600 to-teal-500 text-white rounded-2xl shadow-sm text-xl">
+            <i class="fa-solid fa-file-excel"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+              <span>Sổ Điểm & Bảng Tổng Hợp Bài Thi Của Học Sinh</span>
+              <span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-2xs font-extrabold rounded-md uppercase">Giáo viên</span>
+            </h3>
+            <p class="text-xs text-slate-500">
+              Tổng hợp tất cả học sinh đã từng làm bài thi trên hệ thống. Dữ liệu bảo mật chỉ giáo viên xem được.
+            </p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="btn-teacher-logout" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-semibold rounded-xl transition border border-rose-200 flex items-center gap-1.5">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span>Đăng xuất</span>
+          </button>
+          <button id="close-gradebook-btn" class="p-1.5 text-slate-400 hover:text-slate-700 rounded-xl text-lg">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Stats row -->
+      <div id="gradebook-stats-row" class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+        <div class="p-3 bg-blue-50/70 border border-blue-200 rounded-2xl text-center">
+          <div class="text-xs font-semibold text-slate-500 uppercase">Tổng lượt thi</div>
+          <div id="gb-total-count" class="text-xl font-black text-blue-900 font-mono mt-0.5">0</div>
+        </div>
+        <div class="p-3 bg-emerald-50/70 border border-emerald-200 rounded-2xl text-center">
+          <div class="text-xs font-semibold text-slate-500 uppercase">Điểm trung bình</div>
+          <div id="gb-avg-score" class="text-xl font-black text-emerald-700 font-mono mt-0.5">0 / 10</div>
+        </div>
+        <div class="p-3 bg-amber-50/70 border border-amber-200 rounded-2xl text-center">
+          <div class="text-xs font-semibold text-slate-500 uppercase">Tỷ lệ Đạt (≥ 5.0)</div>
+          <div id="gb-pass-rate" class="text-xl font-black text-amber-700 font-mono mt-0.5">0%</div>
+        </div>
+        <div class="p-3 bg-purple-50/70 border border-purple-200 rounded-2xl text-center">
+          <div class="text-xs font-semibold text-slate-500 uppercase">Khá - Giỏi (≥ 8.0)</div>
+          <div id="gb-good-rate" class="text-xl font-black text-purple-700 font-mono mt-0.5">0%</div>
+        </div>
+      </div>
+
+      <!-- Filter row -->
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-2.5 mb-3 text-xs">
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <input type="text" id="gb-search-student" placeholder="Tìm tên học sinh..." class="w-full sm:w-56 px-3 py-1.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500 text-xs bg-slate-50">
+          <select id="gb-class-filter" class="px-3 py-1.5 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold focus:outline-none">
+            <option value="all">Tất cả các lớp</option>
+          </select>
+        </div>
+        <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+          <button id="btn-export-excel" class="px-3.5 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold rounded-xl transition shadow-xs flex items-center gap-1.5" title="Tải file Excel (.xls) có đầy đủ định dạng">
+            <i class="fa-solid fa-file-excel"></i>
+            <span>Xuất file Excel (.xls)</span>
+          </button>
+          <button id="btn-export-csv" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition text-xs flex items-center gap-1.5" title="Tải file CSV">
+            <i class="fa-solid fa-download"></i>
+            <span>File (.CSV)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Submissions table -->
+      <div class="flex-1 overflow-y-auto border border-slate-200 rounded-2xl mb-4">
+        <table class="w-full text-left text-xs text-slate-700">
+          <thead class="bg-slate-100/90 text-slate-800 font-bold border-b border-slate-200 sticky top-0">
+            <tr>
+              <th class="p-2.5">STT</th>
+              <th class="p-2.5">Học sinh</th>
+              <th class="p-2.5">Lớp</th>
+              <th class="p-2.5">Đề thi</th>
+              <th class="p-2.5">Điểm (thang 10)</th>
+              <th class="p-2.5">Đúng/Tổng</th>
+              <th class="p-2.5">Thời gian</th>
+              <th class="p-2.5">Ngày nộp</th>
+              <th class="p-2.5 text-center">Xóa</th>
+            </tr>
+          </thead>
+          <tbody id="gb-submissions-tbody" class="divide-y divide-slate-100"></tbody>
+        </table>
+      </div>
+
+      <!-- Bottom actions -->
+      <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-200">
+        <div class="flex items-center gap-2">
+          <button id="btn-bottom-export-excel" class="px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold rounded-2xl text-xs sm:text-sm flex items-center gap-1.5">
+            <i class="fa-solid fa-file-excel"></i>
+            <span>Tải file Excel tổng hợp (.xls)</span>
+          </button>
+          <button id="btn-bottom-clear-all" class="px-3 py-2.5 bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 font-semibold rounded-2xl text-xs transition flex items-center gap-1">
+            <i class="fa-solid fa-trash"></i>
+            <span>Xóa toàn bộ sổ điểm</span>
+          </button>
+        </div>
+        <button id="btn-bottom-close-gb" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-2xl text-xs sm:text-sm transition">
+          Đóng
+        </button>
+      </div>
     </div>
   </div>
 
@@ -555,13 +731,45 @@
       answeredCountEl.textContent = answered;
       totalCountEl.textContent = currentQuestions.length;
       progressBar.style.width = `${(answered / currentQuestions.length) * 100}%`;
+
+      const banner10 = document.getElementById('banner-completed-10');
+      const submitBtn = document.getElementById('submit-quiz-button');
+      const sideSubmitBtn = document.getElementById('sidebar-submit-btn');
+
+      if (!isSubmitted && answered === currentQuestions.length) {
+        if (banner10) {
+          banner10.classList.remove('hidden');
+          const totalSpan = document.getElementById('banner-answered-total');
+          if (totalSpan) totalSpan.textContent = `${answered}/${currentQuestions.length}`;
+        }
+        if (submitBtn) {
+          submitBtn.className = "px-4 py-1.5 text-xs sm:text-sm font-bold bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl transition shadow-md shadow-emerald-500/25 ring-2 ring-emerald-400 animate-pulse";
+          submitBtn.innerHTML = `<i class="fa-solid fa-check mr-1"></i> Nộp bài ngay (${answered}/${currentQuestions.length})`;
+        }
+        if (sideSubmitBtn) {
+          sideSubmitBtn.className = "w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-xs sm:text-sm font-extrabold rounded-2xl transition shadow-md shadow-emerald-500/25 ring-2 ring-emerald-400 flex items-center justify-center gap-2";
+          sideSubmitBtn.innerHTML = `<i class="fa-solid fa-check"></i> <span>Nộp bài ngay (Đã xong 10/10)</span>`;
+        }
+      } else {
+        if (banner10) banner10.classList.add('hidden');
+        if (submitBtn && !isSubmitted) {
+          submitBtn.className = "px-4 py-1.5 text-xs sm:text-sm font-bold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl transition shadow-md shadow-blue-500/20";
+          submitBtn.textContent = `Nộp bài (${answered}/${currentQuestions.length})`;
+        }
+        if (sideSubmitBtn && !isSubmitted) {
+          sideSubmitBtn.className = "w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs sm:text-sm font-bold rounded-2xl transition shadow-md shadow-blue-500/20 flex items-center justify-center gap-2";
+          sideSubmitBtn.innerHTML = `<i class="fa-solid fa-check"></i> <span>Nộp bài thi (${answered}/${currentQuestions.length})</span>`;
+        }
+      }
     }
 
     // Timer
     timerInterval = setInterval(() => {
+      if (isSubmitted) return;
       if (timeRemaining <= 0) {
         clearInterval(timerInterval);
-        alert('Hết giờ làm bài!');
+        alert('⏰ Hết giờ làm bài 10 phút! Hệ thống đã tự động nộp bài và chấm điểm.');
+        submitExam();
         return;
       }
       timeRemaining--;
@@ -590,9 +798,357 @@
       if (currentIndex < currentQuestions.length - 1) { currentIndex++; renderQuestion(); renderNavGrid(); }
     };
 
-    renderQuestion();
-    renderNavGrid();
-    updateProgress();
+    document.getElementById('submit-quiz-button').onclick = submitExam;
+    document.getElementById('sidebar-submit-btn').onclick = submitExam;
+    const bannerSubmitBtn = document.getElementById('banner-submit-btn');
+    if (bannerSubmitBtn) bannerSubmitBtn.onclick = submitExam;
+
+    function submitExam() {
+      const answered = Object.keys(userAnswers).length;
+      if (answered < currentQuestions.length) {
+        if (!confirm(`Bạn đã làm ${answered}/${currentQuestions.length} câu (còn ${currentQuestions.length - answered} câu chưa chọn). Bạn có chắc chắn muốn nộp bài sớm không?`)) {
+          return;
+        }
+      }
+      isSubmitted = true;
+      clearInterval(timerInterval);
+      document.getElementById('question-area').classList.add('hidden');
+      document.getElementById('question-nav-panel').classList.add('hidden');
+      document.getElementById('results-container').classList.remove('hidden');
+
+      let correct = 0;
+      let bietCorrect = 0, hieuCorrect = 0, vdCorrect = 0;
+      let bietTotal = 0, hieuTotal = 0, vdTotal = 0;
+      let detailHtml = '';
+
+      currentQuestions.forEach((q, idx) => {
+        if (q.level === 'Biết') bietTotal++;
+        if (q.level === 'Hiểu') hieuTotal++;
+        if (q.level === 'Vận dụng') vdTotal++;
+
+        const userAns = userAnswers[q.id];
+        const isRight = userAns === q.correctAnswer;
+        if (isRight) {
+          correct++;
+          if (q.level === 'Biết') bietCorrect++;
+          if (q.level === 'Hiểu') hieuCorrect++;
+          if (q.level === 'Vận dụng') vdCorrect++;
+        }
+
+        detailHtml += `
+          <div class="p-4 rounded-2xl border ${isRight ? 'bg-emerald-50/70 border-emerald-200' : 'bg-rose-50/70 border-rose-200'}">
+            <div class="flex justify-between items-start mb-2">
+              <span class="font-bold text-sm text-slate-900">Câu ${idx + 1}: ${q.question}</span>
+              <span class="px-2 py-0.5 rounded text-xs font-bold ${isRight ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white'}">${isRight ? '✔ Đúng' : '✘ Sai'}</span>
+            </div>
+            <div class="text-xs space-y-1 mb-2">
+              <div><strong>Đáp án đúng:</strong> <span class="text-emerald-700 font-bold">${q.correctAnswer}</span> | <strong>Bạn đã chọn:</strong> ${userAns || 'Chưa chọn'}</div>
+              <div class="text-slate-700"><strong>💡 Giải thích lý do:</strong> ${q.explanations.correct}</div>
+              ${!isRight && userAns && q.explanations[userAns] ? `<div class="text-rose-800 bg-rose-50 p-2 rounded border border-rose-200"><strong>Lý do lựa chọn ${userAns} chưa đúng:</strong> ${q.explanations[userAns]}</div>` : ''}
+            </div>
+          </div>
+        `;
+      });
+
+      const score10 = Number(((correct / currentQuestions.length) * 10).toFixed(1));
+      const percent = Math.round((correct / currentQuestions.length) * 100);
+      const studentName = document.getElementById('badge-name').textContent || 'Học sinh';
+      const studentClass = document.getElementById('badge-class').textContent || '10';
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('vi-VN') + ' ' + now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+      const timeSpent = `${Math.floor((600 - timeRemaining) / 60).toString().padStart(2, '0')}:${((600 - timeRemaining) % 60).toString().padStart(2, '0')}`;
+
+      // Save submission to history
+      const newSub = {
+        id: Date.now().toString(),
+        studentName,
+        studentClass,
+        mode: currentQuestions.length === 10 ? 'exam10' : 'practice100',
+        date: dateStr,
+        timeSpent,
+        score10,
+        percentage: percent,
+        correctCount: correct,
+        totalCount: currentQuestions.length,
+        breakdown: `${bietCorrect}/${bietTotal} Biết, ${hieuCorrect}/${hieuTotal} Hiểu, ${vdCorrect}/${vdTotal} Vận dụng`
+      };
+
+      try {
+        const history = JSON.parse(localStorage.getItem('quiz_exam_history') || '[]');
+        history.unshift(newSub);
+        localStorage.setItem('quiz_exam_history', JSON.stringify(history));
+      } catch (e) {}
+
+      document.getElementById('final-score-val').textContent = score10;
+      document.getElementById('final-percent-val').textContent = `${percent}%`;
+      document.getElementById('res-student-name').textContent = studentName;
+      document.getElementById('res-student-class').textContent = studentClass;
+      document.getElementById('res-datetime').textContent = dateStr;
+      document.getElementById('results-detail-list').innerHTML = detailHtml;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // TEACHER LOGIC
+    let isTeacherAuth = sessionStorage.getItem('teacher_auth_token') === 'giaovien123';
+    function updateTeacherUI() {
+      const portalLabel = document.getElementById('teacher-portal-label');
+      if (isTeacherAuth) {
+        portalLabel.innerHTML = '<i class="fa-solid fa-lock-open text-emerald-400 mr-1"></i> Sổ điểm GV';
+      } else {
+        portalLabel.innerHTML = '<i class="fa-solid fa-lock text-amber-400 mr-1"></i> Cổng Giáo Viên';
+      }
+    }
+    updateTeacherUI();
+
+    document.getElementById('btn-teacher-portal').onclick = () => {
+      if (isTeacherAuth) {
+        openTeacherGradebook();
+      } else {
+        document.getElementById('teacher-login-modal').classList.remove('hidden');
+        document.getElementById('teacher-login-err').classList.add('hidden');
+      }
+    };
+
+    document.getElementById('close-teacher-login-btn').onclick = () => {
+      document.getElementById('teacher-login-modal').classList.add('hidden');
+    };
+
+    document.getElementById('teacher-login-form').onsubmit = (e) => {
+      e.preventDefault();
+      const pwd = document.getElementById('input-teacher-pwd').value;
+      if (pwd === 'giaovien123' || pwd === 'admin123') {
+        isTeacherAuth = true;
+        sessionStorage.setItem('teacher_auth_token', 'giaovien123');
+        document.getElementById('teacher-login-modal').classList.add('hidden');
+        updateTeacherUI();
+        openTeacherGradebook();
+      } else {
+        document.getElementById('teacher-login-err').classList.remove('hidden');
+      }
+    };
+
+    document.getElementById('btn-teacher-logout').onclick = () => {
+      isTeacherAuth = false;
+      sessionStorage.removeItem('teacher_auth_token');
+      document.getElementById('teacher-gradebook-modal').classList.add('hidden');
+      updateTeacherUI();
+    };
+
+    document.getElementById('close-gradebook-btn').onclick = () => {
+      document.getElementById('teacher-gradebook-modal').classList.add('hidden');
+    };
+    document.getElementById('btn-bottom-close-gb').onclick = () => {
+      document.getElementById('teacher-gradebook-modal').classList.add('hidden');
+    };
+
+    function getHistoryList() {
+      try {
+        return JSON.parse(localStorage.getItem('quiz_exam_history') || '[]');
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function openTeacherGradebook() {
+      document.getElementById('teacher-gradebook-modal').classList.remove('hidden');
+      renderTeacherGradebook();
+    }
+
+    function renderTeacherGradebook() {
+      const history = getHistoryList();
+      const classFilter = document.getElementById('gb-class-filter').value || 'all';
+      const search = (document.getElementById('gb-search-student').value || '').toLowerCase();
+
+      // Populate classes
+      const select = document.getElementById('gb-class-filter');
+      const currentSelected = select.value;
+      const classes = Array.from(new Set(history.map(h => h.studentClass).filter(Boolean)));
+      select.innerHTML = '<option value="all">Tất cả các lớp</option>' + classes.map(c => `<option value="${c}" ${c === currentSelected ? 'selected' : ''}>Lớp ${c}</option>`).join('');
+
+      const filtered = history.filter(item => {
+        const matchClass = classFilter === 'all' || item.studentClass === classFilter;
+        const matchSearch = !search || item.studentName.toLowerCase().includes(search);
+        return matchClass && matchSearch;
+      });
+
+      // Stats
+      document.getElementById('gb-total-count').textContent = filtered.length;
+      if (filtered.length > 0) {
+        const avg = (filtered.reduce((acc, cur) => acc + cur.score10, 0) / filtered.length).toFixed(1);
+        const pass = Math.round((filtered.filter(h => h.score10 >= 5.0).length / filtered.length) * 100);
+        const good = Math.round((filtered.filter(h => h.score10 >= 8.0).length / filtered.length) * 100);
+        document.getElementById('gb-avg-score').textContent = `${avg} / 10`;
+        document.getElementById('gb-pass-rate').textContent = `${pass}%`;
+        document.getElementById('gb-good-rate').textContent = `${good}%`;
+      } else {
+        document.getElementById('gb-avg-score').textContent = `0 / 10`;
+        document.getElementById('gb-pass-rate').textContent = `0%`;
+        document.getElementById('gb-good-rate').textContent = `0%`;
+      }
+
+      // Tbody
+      const tbody = document.getElementById('gb-submissions-tbody');
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="9" class="p-6 text-center text-slate-400">Chưa có kết quả nộp bài nào phù hợp.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map((item, idx) => `
+        <tr class="hover:bg-blue-50/40">
+          <td class="p-2.5 font-medium">${idx + 1}</td>
+          <td class="p-2.5 font-bold text-slate-900">${item.studentName}</td>
+          <td class="p-2.5 font-semibold text-blue-700">${item.studentClass}</td>
+          <td class="p-2.5">${item.mode === 'exam10' ? '<span class="px-2 py-0.5 bg-amber-100 text-amber-800 rounded text-2xs font-bold">10 câu</span>' : '<span class="px-2 py-0.5 bg-blue-100 text-blue-800 rounded text-2xs font-bold">100 câu</span>'}</td>
+          <td class="p-2.5 font-mono font-bold text-sm text-emerald-700">${item.score10}</td>
+          <td class="p-2.5">${item.correctCount}/${item.totalCount} (${item.percentage}%)</td>
+          <td class="p-2.5 text-slate-500 font-mono">${item.timeSpent}</td>
+          <td class="p-2.5 text-slate-500">${item.date}</td>
+          <td class="p-2.5 text-center">
+            <button onclick="deleteSingleSubmission('${item.id}')" class="text-slate-400 hover:text-rose-600 p-1"><i class="fa-regular fa-trash-can"></i></button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    window.deleteSingleSubmission = (id) => {
+      if (confirm('Xóa kết quả này?')) {
+        let history = getHistoryList();
+        history = history.filter(h => h.id !== id);
+        localStorage.setItem('quiz_exam_history', JSON.stringify(history));
+        renderTeacherGradebook();
+      }
+    };
+
+    document.getElementById('gb-class-filter').onchange = renderTeacherGradebook;
+    document.getElementById('gb-search-student').oninput = renderTeacherGradebook;
+
+    document.getElementById('btn-bottom-clear-all').onclick = () => {
+      if (confirm('Bạn có chắc chắn muốn xóa toàn bộ sổ điểm của tất cả học sinh?')) {
+        localStorage.removeItem('quiz_exam_history');
+        renderTeacherGradebook();
+      }
+    };
+
+    // Export Excel (.xls)
+    function exportExcel() {
+      const history = getHistoryList();
+      const classFilter = document.getElementById('gb-class-filter').value || 'all';
+      const search = (document.getElementById('gb-search-student').value || '').toLowerCase();
+      const filtered = history.filter(item => {
+        const matchClass = classFilter === 'all' || item.studentClass === classFilter;
+        const matchSearch = !search || item.studentName.toLowerCase().includes(search);
+        return matchClass && matchSearch;
+      });
+
+      if (filtered.length === 0) {
+        alert('Không có dữ liệu bài thi để xuất!');
+        return;
+      }
+
+      const avgScore = (filtered.reduce((acc, cur) => acc + cur.score10, 0) / filtered.length).toFixed(1);
+      const passCount = filtered.filter(h => h.score10 >= 5.0).length;
+      const passPercent = Math.round((passCount / filtered.length) * 100);
+
+      const rows = filtered.map((item, idx) => `
+        <tr style="height: 28px; background-color: ${idx % 2 === 0 ? '#ffffff' : '#f8fafc'}; text-align: center;">
+          <td style="border: 1px solid #cbd5e1; font-weight: bold;">${idx + 1}</td>
+          <td style="border: 1px solid #cbd5e1; text-align: left; padding-left: 8px; font-weight: bold;">${item.studentName}</td>
+          <td style="border: 1px solid #cbd5e1; font-weight: bold; color: #1d4ed8;">${item.studentClass}</td>
+          <td style="border: 1px solid #cbd5e1;">${item.mode === 'exam10' ? 'Đề 10 câu (10 phút)' : 'Ôn luyện 100 câu'}</td>
+          <td style="border: 1px solid #cbd5e1; font-weight: bold; color: #15803d;">${item.score10}</td>
+          <td style="border: 1px solid #cbd5e1;">${item.correctCount}/${item.totalCount}</td>
+          <td style="border: 1px solid #cbd5e1; font-weight: bold;">${item.percentage}%</td>
+          <td style="border: 1px solid #cbd5e1; text-align: left; padding-left: 6px;">${item.breakdown}</td>
+          <td style="border: 1px solid #cbd5e1;">${item.timeSpent}</td>
+          <td style="border: 1px solid #cbd5e1; color: #64748b;">${item.date}</td>
+        </tr>
+      `).join('');
+
+      const html = `
+        <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+        <head>
+          <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+          <style>
+            th { background-color: #1e3a8a; color: #ffffff; border: 1px solid #cbd5e1; padding: 10px; font-weight: bold; }
+            td { border: 1px solid #cbd5e1; padding: 6px; }
+          </style>
+        </head>
+        <body>
+          <table style="font-family: Arial, sans-serif; font-size: 12px; border-collapse: collapse; width: 100%;">
+            <tr><td colspan="10" style="font-size: 14px; font-weight: bold; color: #1e3a8a; text-align: center; height: 30px;">BỘ GIÁO DỤC VÀ ĐÀO TẠO — MÔN CÔNG NGHỆ 10</td></tr>
+            <tr><td colspan="10" style="font-size: 16px; font-weight: bold; color: #0f172a; text-align: center; height: 35px;">BẢNG TỔNG HỢP KẾT QUẢ BÀI THI - BÀI 3: CÔNG NGHỆ PHỔ BIẾN</td></tr>
+            <tr><td colspan="10" style="font-size: 12px; color: #475569; text-align: center; height: 25px;">Lớp: <b>${classFilter === 'all' ? 'Tất cả các lớp' : classFilter}</b> | Ngày xuất: <b>${new Date().toLocaleDateString('vi-VN')}</b></td></tr>
+            <tr><td colspan="10" style="background-color: #f1f5f9; font-weight: bold; text-align: center; height: 28px; border: 1px solid #cbd5e1;">Tổng số bài: ${filtered.length} | Điểm trung bình: ${avgScore}/10 | Tỷ lệ Đạt: ${passPercent}%</td></tr>
+            <tr style="height: 15px;"></tr>
+            <thead>
+              <tr style="background-color: #1e3a8a; color: #ffffff; text-align: center; font-weight: bold;">
+                <th>STT</th>
+                <th>Họ và tên học sinh</th>
+                <th>Lớp</th>
+                <th>Loại bài thi</th>
+                <th>Điểm số (Thang 10)</th>
+                <th>Số câu đúng</th>
+                <th>Tỷ lệ (%)</th>
+                <th>Phân bố ma trận</th>
+                <th>Thời gian làm</th>
+                <th>Thời gian nộp bài</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </body>
+        </html>
+      `;
+
+      const blob = new Blob(['\uFEFF' + html], { type: 'application/vnd.ms-excel;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `Bang_diem_tong_hop_${classFilter}_${new Date().toISOString().slice(0, 10)}.xls`;
+      a.click();
+    }
+
+    // Export CSV
+    function exportCSV() {
+      const history = getHistoryList();
+      const classFilter = document.getElementById('gb-class-filter').value || 'all';
+      const search = (document.getElementById('gb-search-student').value || '').toLowerCase();
+      const filtered = history.filter(item => {
+        const matchClass = classFilter === 'all' || item.studentClass === classFilter;
+        const matchSearch = !search || item.studentName.toLowerCase().includes(search);
+        return matchClass && matchSearch;
+      });
+
+      if (filtered.length === 0) {
+        alert('Không có dữ liệu bài thi để xuất!');
+        return;
+      }
+
+      const headers = ['STT', 'Họ và tên học sinh', 'Lớp', 'Loại bài thi', 'Điểm số', 'Số câu đúng', 'Tổng câu', 'Tỷ lệ %', 'Thời gian làm bài', 'Ma trận', 'Ngày nộp'];
+      const rows = filtered.map((item, idx) => [
+        idx + 1,
+        `"${item.studentName}"`,
+        `"${item.studentClass}"`,
+        `"${item.mode === 'exam10' ? 'Đề 10 câu (10 phút)' : 'Ôn luyện 100 câu'}"`,
+        item.score10,
+        item.correctCount,
+        item.totalCount,
+        `${item.percentage}%`,
+        `"${item.timeSpent}"`,
+        `"${item.breakdown}"`,
+        `"${item.date}"`
+      ]);
+
+      const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `Bang_diem_${classFilter}_${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+    }
+
+    document.getElementById('btn-export-excel').onclick = exportExcel;
+    document.getElementById('btn-bottom-export-excel').onclick = exportExcel;
+    document.getElementById('btn-export-csv').onclick = exportCSV;
   </script>
 </body>
 </html>
